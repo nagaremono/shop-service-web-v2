@@ -1,0 +1,15 @@
+query products(
+  $orderBy: [ProductOrderByWithRelationInput!]
+  $take: Int
+  $skip: Int
+) {
+  products(orderBy: $orderBy, take: $take, skip: $skip) {
+    id
+    createdAt
+    updatedAt
+    stock
+    price
+    name
+    images
+  }
+}

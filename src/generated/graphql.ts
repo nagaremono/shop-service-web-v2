@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
-import { useMutation, UseMutationOptions } from 'react-query';
+import { RequestInit } from 'graphql-request/dist/types.dom';
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -808,6 +809,7 @@ export type Query = {
   groupBySoldItem: Array<SoldItemGroupBy>;
   groupByTransaction: Array<TransactionGroupBy>;
   groupByUser: Array<UserGroupBy>;
+  me?: Maybe<User>;
   product?: Maybe<Product>;
   products: Array<Product>;
   soldItem?: Maybe<SoldItem>;
@@ -2111,6 +2113,15 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: AuthMessage };
 
+export type ProductsQueryVariables = Exact<{
+  orderBy?: Maybe<Array<ProductOrderByWithRelationInput> | ProductOrderByWithRelationInput>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type ProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: string, createdAt: any, updatedAt: any, stock: number, price: any, name: string, images: any }> };
+
 
 export const LoginDocument = `
     mutation login($email: String!, $password: String!) {
@@ -2127,5 +2138,32 @@ export const useLoginMutation = <
     ) => 
     useMutation<LoginMutation, TError, LoginMutationVariables, TContext>(
       (variables?: LoginMutationVariables) => fetcher<LoginMutation, LoginMutationVariables>(client, LoginDocument, variables, headers)(),
+      options
+    );
+export const ProductsDocument = `
+    query products($orderBy: [ProductOrderByWithRelationInput!], $take: Int, $skip: Int) {
+  products(orderBy: $orderBy, take: $take, skip: $skip) {
+    id
+    createdAt
+    updatedAt
+    stock
+    price
+    name
+    images
+  }
+}
+    `;
+export const useProductsQuery = <
+      TData = ProductsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient, 
+      variables?: ProductsQueryVariables, 
+      options?: UseQueryOptions<ProductsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) => 
+    useQuery<ProductsQuery, TError, TData>(
+      variables === undefined ? ['products'] : ['products', variables],
+      fetcher<ProductsQuery, ProductsQueryVariables>(client, ProductsDocument, variables, headers),
       options
     );

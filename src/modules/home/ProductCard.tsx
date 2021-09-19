@@ -1,8 +1,13 @@
 import { Heading, Text, Grid } from '@chakra-ui/layout';
 import React from 'react';
 import { AspectRatio, GridItem, Image, SimpleGrid } from '@chakra-ui/react';
+import { Product, ProductsQuery } from '../../generated/graphql';
 
-export const ProductCard: React.FC = () => {
+interface ProductCardProps {
+  product: ProductsQuery['products'][number];
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Grid
       border="2px"
@@ -21,12 +26,12 @@ export const ProductCard: React.FC = () => {
         alignSelf="center"
       >
         <AspectRatio mx="auto" ratio={16 / 10} maxW="360" justify="center">
-          <Image src={`fixtures/cashier.jpg`} alt={`image`} />
+          <Image src={`${product.images[0]}`} alt={`${product.name} image`} />
         </AspectRatio>
       </GridItem>
       <GridItem alignSelf="center" rowSpan={2} colSpan={3}>
         <Heading as="h4" fontSize={{ sm: 16, xl: 20 }} my={4} mx={2}>
-          Product name
+          {product.name}
         </Heading>
         <SimpleGrid
           columns={1}
@@ -37,13 +42,13 @@ export const ProductCard: React.FC = () => {
         >
           <Text as="span">
             <b>
-              {parseFloat('1000.00').toLocaleString('id-ID', {
+              {parseFloat(product.price).toLocaleString('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
               })}
             </b>
           </Text>
-          <Text as="span">Stock left 10</Text>
+          <Text as="span">Stock left {product.stock}</Text>
         </SimpleGrid>
       </GridItem>
     </Grid>

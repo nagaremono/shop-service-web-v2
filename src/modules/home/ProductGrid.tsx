@@ -1,12 +1,17 @@
 import { VStack } from '@chakra-ui/react';
 import React from 'react';
+import { Product, ProductsQuery } from '../../generated/graphql';
 import { ProductCard } from './ProductCard';
 
-export const ProductGrid: React.FC = () => {
+interface ProductGridProps {
+  products: ProductsQuery['products'];
+}
+
+export const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <VStack spacing={6} w="100%">
-      {[1].map((p) => (
-        <ProductCard key={p} />
+      {products.map((p) => (
+        <ProductCard product={p} key={p.id} />
       ))}
     </VStack>
   );
