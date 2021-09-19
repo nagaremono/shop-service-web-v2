@@ -2113,6 +2113,16 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: AuthMessage };
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: AuthMessage };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, username: string, email: string }> };
+
 export type ProductsQueryVariables = Exact<{
   orderBy?: Maybe<Array<ProductOrderByWithRelationInput> | ProductOrderByWithRelationInput>;
   take?: Maybe<Scalars['Int']>;
@@ -2138,6 +2148,46 @@ export const useLoginMutation = <
     ) => 
     useMutation<LoginMutation, TError, LoginMutationVariables, TContext>(
       (variables?: LoginMutationVariables) => fetcher<LoginMutation, LoginMutationVariables>(client, LoginDocument, variables, headers)(),
+      options
+    );
+export const LogoutDocument = `
+    mutation logout {
+  logout
+}
+    `;
+export const useLogoutMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient, 
+      options?: UseMutationOptions<LogoutMutation, TError, LogoutMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) => 
+    useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>(
+      (variables?: LogoutMutationVariables) => fetcher<LogoutMutation, LogoutMutationVariables>(client, LogoutDocument, variables, headers)(),
+      options
+    );
+export const MeDocument = `
+    query me {
+  me {
+    id
+    username
+    email
+  }
+}
+    `;
+export const useMeQuery = <
+      TData = MeQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient, 
+      variables?: MeQueryVariables, 
+      options?: UseQueryOptions<MeQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) => 
+    useQuery<MeQuery, TError, TData>(
+      variables === undefined ? ['me'] : ['me', variables],
+      fetcher<MeQuery, MeQueryVariables>(client, MeDocument, variables, headers),
       options
     );
 export const ProductsDocument = `
